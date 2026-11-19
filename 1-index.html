@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color:#FAF8F4">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#131e36">
+  <meta name="robots" content="noindex">
+  <title>Your Journey · Feedback · Happy Camper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Palette hardcoded as hex throughout (iOS Safari var() safety). */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-text-size-adjust:100%;background-color:#FAF8F4}
+    body{font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background-color:#FAF8F4;color:#141B2D;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+    a{color:#131e36}
+    button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+    button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+ 
+    /* ── HEADER ── */
+    #app-header{position:sticky;top:0;z-index:50;background-color:#131e36;background-image:linear-gradient(160deg,#131e36 0%,#1a2848 100%);border-bottom:1px solid #2A3756;padding-top:env(safe-area-inset-top)}
+    .hdr-top{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 8px 16px;max-width:760px;margin:0 auto}
+    .hdr-dest{font-family:'Cormorant Garamond',Georgia,serif;font-size:15px;font-weight:400;letter-spacing:.4px;color:#FFFFFF;white-space:nowrap}
+    .hdr-hc{font-size:8.5px;color:#8C97B0;letter-spacing:.9px;text-transform:uppercase;margin-top:1px}
+    .hdr-ver{display:inline-block;margin-left:6px;font-size:9px;font-weight:600;letter-spacing:.06em;color:#131e36;background-color:#C9A84C;border-radius:4px;padding:0 5px;vertical-align:1px}
+    .hdr-logo{display:block;height:48px;width:auto;flex-shrink:0;filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
+    .progress{height:3px;background-color:#22304F}
+    .progress-bar{height:3px;width:0;background-color:#C9A84C;transition:width .35s ease}
+ 
+    /* ── MAIN ── */
+    main{display:block;max-width:760px;margin:0 auto;padding:16px 14px 60px;background-color:#FAF8F4}
+    .cover{background-color:#131e36;background-image:linear-gradient(135deg,#1a2848 0%,#131e36 60%,#0c1426 100%);border-radius:18px;padding:30px 22px 26px;color:#FFFFFF;position:relative;overflow:hidden;margin-bottom:16px;text-align:center}
+    .cover::after{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.22) 0%,rgba(201,168,76,0) 70%)}
+    .cover-kicker{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#C9A84C;font-weight:600}
+    .cover h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(30px,7vw,42px);font-weight:300;letter-spacing:.5px;line-height:1.1;margin:12px 0 8px;color:#FFFFFF}
+    .cover-trip{font-size:13px;color:#C8D2E6}
+    .cover-rule{width:64px;height:1px;background-color:#C9A84C;margin:16px auto}
+    .cover p{font-size:13.5px;color:#DCE3F0;max-width:46ch;margin:0 auto;line-height:1.65;position:relative;z-index:1}
+    .cover-tag{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16px;color:#C9A84C;margin-top:16px;position:relative;z-index:1}
+    .cover-meta{font-size:11px;color:#8C97B0;margin-top:10px;letter-spacing:.3px}
+ 
+    /* ── SECTIONS ── */
+    .section-label{display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:1.3px;color:#55607A;padding:18px 2px 9px}
+    .sec-num{width:26px;height:26px;border-radius:50%;background-color:#131e36;color:#C9A84C;border:1px solid #C9A84C;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;letter-spacing:0;flex-shrink:0}
+    .card{background-color:#FFFFFF;border-radius:18px;border:1px solid #ECEEF4;box-shadow:0 2px 12px rgba(19,30,54,.08);padding:4px 18px;margin-bottom:6px}
+    .q{padding:18px 0;border-bottom:1px solid #F0F1F5;background-color:#FFFFFF}
+    .q:last-child{border-bottom:none}
+    .q-label{display:block;font-size:14.5px;font-weight:500;color:#141B2D;line-height:1.4}
+    .q-label .req{color:#c8627c;font-weight:600;margin-left:3px}
+    .q-hint{font-size:12px;color:#7A869E;margin-top:3px;line-height:1.5}
+    .q.invalid .q-label{color:#A8344E}
+    .q-err{display:none;font-size:12px;color:#A8344E;font-weight:500;margin-top:8px}
+    .q.invalid .q-err{display:block}
+ 
+    input[type=text],input[type=email],textarea{width:100%;margin-top:10px;padding:12px 13px;border:1.5px solid #D6DCE8;border-radius:10px;font-size:16px;background-color:#FAF8F4!important;color:#141B2D!important;outline:none;-webkit-appearance:none;appearance:none}
+    textarea{min-height:96px;resize:vertical;line-height:1.5}
+    input[type=text]:focus,input[type=email]:focus,textarea:focus{border-color:#131e36!important;background-color:#FFFFFF!important}
+    .row2{display:grid;grid-template-columns:1fr;gap:0 12px}
+    @media(min-width:560px){.row2{grid-template-columns:1fr 1fr}}
+ 
+    /* stars */
+    .stars{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+    .stars input,.scale input,.choices input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+    .star{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;font-size:22px;line-height:1;border:1px solid #D6DCE8!important;background-color:#FFFFFF!important;color:#C4CAD6!important;cursor:pointer;transition:transform .12s ease;user-select:none;-webkit-user-select:none}
+    .star:active{transform:scale(.92)}
+    .star.lit{background-color:#FBF4E2!important;border-color:#C9A84C!important;color:#B08A2E!important}
+    .star-cap{font-size:12px;color:#55607A;margin-top:7px;min-height:18px;font-style:italic}
+    .na{display:inline-flex;align-items:center;margin-left:4px;padding:0 12px;height:46px;border-radius:12px;font-size:12px;font-weight:500;border:1px dashed #C4CAD6!important;background-color:#FFFFFF!important;color:#7A869E!important;cursor:pointer}
+    .na.on{background-color:#EEF1F8!important;color:#131e36!important;border-style:solid!important;border-color:#131e36!important}
+ 
+    /* 0–10 scale */
+    .scale{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;margin-top:12px}
+    .scale label{display:flex;align-items:center;justify-content:center;height:44px;border-radius:9px;font-size:13.5px;font-weight:600;border:1px solid #D6DCE8!important;background-color:#FFFFFF!important;color:#2A3450!important;cursor:pointer;user-select:none;-webkit-user-select:none}
+    .scale label.on{background-color:#131e36!important;color:#FFFFFF!important;border-color:#131e36!important}
+    .scale-ends{display:flex;justify-content:space-between;font-size:11px;color:#7A869E;margin-top:6px}
+    @media(max-width:380px){.scale{grid-template-columns:repeat(6,1fr)}}
+ 
+    /* choice chips */
+    .choices{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+    .chip{display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:9px 14px;border-radius:99px;font-size:13px;font-weight:500;border:1px solid #D6DCE8!important;background-color:#FFFFFF!important;color:#2A3450!important;cursor:pointer;user-select:none;-webkit-user-select:none}
+    .chip.on{background-color:#131e36!important;color:#FFFFFF!important;border-color:#131e36!important}
+    .chip.on.gold{background-color:#FBF4E2!important;color:#6B5212!important;border-color:#C9A84C!important}
+    .other-wrap{display:none}
+    .other-wrap.show{display:block}
+ 
+    /* consent */
+    .consent{display:flex;gap:12px;align-items:flex-start;margin-top:12px;padding:13px 14px;border-radius:12px;background-color:#FAF8F4;border:1px solid #ECEEF4;cursor:pointer}
+    .consent input{width:22px;height:22px;flex-shrink:0;margin-top:1px;accent-color:#131e36}
+    .consent span{font-size:13px;color:#2A3450;line-height:1.5}
+ 
+    /* submit */
+    .submit-card{background-color:#FFFFFF;border-radius:18px;border:1px solid #ECEEF4;box-shadow:0 2px 12px rgba(19,30,54,.08);padding:20px 18px;margin-top:18px;text-align:center}
+    .submit-btn{width:100%;min-height:54px;border:none;border-radius:12px;font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background-color:#131e36!important;color:#FFFFFF!important;box-shadow:0 4px 14px rgba(19,30,54,.22)}
+    .submit-btn:disabled{opacity:.6}
+    .submit-btn .gold{color:#C9A84C}
+    .submit-note{font-size:11.5px;color:#7A869E;margin-top:10px;line-height:1.55}
+    .form-err{display:none;margin-top:14px;padding:12px 14px;border-radius:10px;background-color:#FDF1F4;border-left:3px solid #c8627c;color:#7E2F45;font-size:13px;text-align:left;line-height:1.55}
+    .form-err.show{display:block}
+    .form-err a{color:#7E2F45;font-weight:600}
+    .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+ 
+    /* thank you */
+    #thanks{display:none}
+    #thanks.show{display:block}
+    .thanks-card{background-color:#131e36;background-image:linear-gradient(160deg,#131e36 0%,#1a2848 100%);border-radius:18px;color:#FFFFFF;text-align:center;padding:42px 24px 36px;margin-top:6px}
+    .thanks-card .mark{font-family:'Hiragino Mincho ProN','Yu Mincho','Noto Serif JP',serif;font-size:30px;letter-spacing:.12em;color:#C9A84C;line-height:1}
+    .thanks-card h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:34px;font-weight:300;margin:12px 0 10px;color:#FFFFFF}
+    .thanks-card p{font-size:14px;color:#DCE3F0;max-width:42ch;margin:0 auto;line-height:1.7}
+    .thanks-card .sig{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:17px;color:#C9A84C;margin-top:20px}
+    .thanks-actions{display:flex;flex-direction:column;gap:9px;margin-top:24px}
+    .t-btn{display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px;border-radius:12px;font-size:13.5px;font-weight:600;text-decoration:none}
+    .t-btn.wa{background-color:#25A35A!important;color:#FFFFFF!important}
+    .t-btn.ghost{background-color:#131e36!important;color:#FFFFFF!important;border:1px solid #3A4866}
+ 
+    footer{max-width:760px;margin:0 auto;padding:6px 16px 40px;text-align:center;background-color:#FAF8F4}
+    .foot-rule{width:48px;height:1px;background-color:#C9A84C;margin:0 auto 14px}
+    .foot-cities{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#55607A}
+    .foot-contact{font-size:12px;color:#7A869E;margin-top:6px}
+    .foot-contact a{color:#55607A;text-decoration:none}
+ 
+    #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background-color:#131e36;color:#FFFFFF;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:500;pointer-events:none;opacity:0;transition:all .22s ease;z-index:99;white-space:nowrap}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body style="background-color:#FAF8F4">
+ 
+<header id="app-header">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-dest">Your Journey · Feedback<span class="hdr-ver" id="hdr-ver">v1</span></div>
+      <div class="hdr-hc">Happy Camper</div>
+    </div>
+    <img class="hdr-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAsCAYAAAD1s+ECAAAW9UlEQVR42pV5eZxeRZX2c6rq3vvuva/p9JbF7DEESFgTNkfET/kpQdx+7kRlUJwRBAJ2QgIKjCADqOCKywjJILsiaCBk2AmLJiQh6fSS7vTeb/e733ur6swf3QkhAzN+999bt+qc5zz1nOVKBgiroFa3QtT2gN4EGP8fDwMEQK0GxGoA2wDeNG/2yg9Uln/h7KqqVatrKnJbR9MDHYCoBcQaQG4D7D+ydwcgtv0v7+ndjFkP0IZ/4AAGiI5xtmNmwx2e6y41xrwMkENsV4fM923oPbTpmHP5H9373c4BAPWDlStnFMYGvyCY8xyJbKede18BwJsBeSFg/q/Nbz7nnHjYuffbYagXSYFKSKfz6gO9p4Gnzvp+e3uZDorPfb+l6cOakCGpHll3oOd2ZiY6stX/RJwA27FgQX1lc3OaHn/c7wDEsYDK1eWJRVwq/U6E+p/g+xefVVm+YvWMup1fHxkf6ADUu4W4AxBPA3TeCSfU+f0924TlrEokHrbM7ToSv2LbyEiuA3BXt7Q413Z3589sbMhJpbYx0VZY8+VVFan/t3oiu3maFnzs3hsAu27hwplOJt3tj458YElr+/03Dg0V1wDyaFoTAKyf1fxjMBbC90+JkBBaoKg972vr93Xf0wGoDVMROPwRbQbEhYC5rq15swDvvabr4LUA8LMvfjE5tmcPvvPcczkAzMwEItxx0UUNl95336HD0VjfOuNV5bl3XLO36xcXL4fTsANmA2A7AAEAWLXKVd379kvpPG7C8CwBZjQ2n7TuxReHjo6AAABH0m0EEHmR3xtmaG2diB/8amN78zUbAL1mat3h+8EXAubGk09OgjF/T9fB708jpr78i19kr3j22Twzi6eeekoRERPAl9577xHDmfm8ZHX1r8N86XwAuHsHwmljCNOGye7920C0XbvqGW1tnoBuMdD7ymXNzQ1HOyk6ALXurZ49zPwHEMvQVZujQqiS1iVP640b25p/uGUa+etnNy+4fm7bbQCgEtbRgV/66r/feBwztyy94YayV39z1wlEZInInHHGGZqZWzk39AAP75/DzHHW6S/t+cNvN452H0wIKQkAvjd/9mdumNf+OQC8AdAbWmf8B4CsSKQe4Hz+VnjuN3wgoYRIVwnz8g9WrpyxAeAOQKgNgO4A1Pqug7deN6v5D8J1Xy2aUkUE8pys1qUk8zc3tDZVzb/pls/3bNrUEwbBnWsA+a9PvDB+XWvTyPaf/OxjHJjq9obKmTvuu7++/9m//LLx5LM6EY63PHvzps/mxsYWnfipT5yCgeGRN5/86/yn7/rlL7xY5CLpOT8EgNDKlyWH1LFqlVJ9PTebwF+skqkN4cT4T5yy8gtsNvcjlUrdVywUGygMTucw9Kf5y3T4kgAQqZUrU7nBg3+mWPRWyhUuc6w9IW9sKalUpMB8//q+gQsAYFqJ7HWtrXNDP/+fjnKGHdc5lYSg6hkNTk1LC/LpNMbHxpmkyI129UrHc7382HgQLUtlWcinr+nsvmg90RFJ/t6KFa08cLDLWLsHQpJ21GUu2++paOwhNiahi4Xzh7Kx424f3585rHR0rIZeP7dtSRgEvw0Z33CNucUFlhWNLcaljBasfeDNQ0NrtgB2DSC2AGbj/PktHgffHe7pPfuiH/5bCeAf3bP2svEQGN30ytZxJ1H+k60//qkz+PeddeP7OycpGvm3q/Z03nX38aQOJVZxYy5HO3bsQENHh6Ff/ezxpDHnZECvKSnHDWEbjFFeNPI5d+mc4zJbnphYuAZ04ZYpCScAuOvii538X/809yVbNnpv186h62e3rgp8/9bojMav2qHhu0UYLs0bW0pKESmCttiDhy4CERYCdDgXfEvJX35k/ZUtq9dtWksk9kEKwBhkO998MN13aP4Lv/l14u+PPPbHjUNjX3mv3LGhrflPsTD4oGUgz5x1HblZa738xI8dt/JDtz/uH5vk1I3LljUOPP7owxG2y093J0YWtTf/Zt3+nn9dV19+tT849OPYrPd9pbR31+1xKVZkjfUTQqzRc2cF64DPbAbkxYDjXXqpqPjjw82dr7z+29VA7+Y1F8jEqfUquuRjJpoqq0msnNnw1jPb0qEOAQCXAssaWmZ9MJp0202Qn0wPTd4Zqys/3/H1B4tKPWasTUWYT2Mpl3R09y9fTeWp6+fP/kyRmbaOqPueG9ubBUC0obXp21G2N+dCbapcKd+X8LDPN689WbNs1ZK3tp8mIt71lEh8TebzN0CbVfVzG32kc9Hu/vF7bxgb/+QaQG4BzKbZ7U+K9OiEG4v2eOXlMeMXNEmHWlasPC1aXVU2tHtv7a6t23fUz27bNXfF/AvnL6nyeGKAHrt/Z2y4pAaixXwDw95wTe/QOhDwg7lti/9lT+fOtbW17cuayreeUBtvrgTwx77J1/5j0F317NjenDw9Hj1NlVcssEEQyYRGjAQ6fH/SbfImBs65tn/oinNqaw4JHX7fi8W2CvBq4WtnKFN61nNlxVmVFatuT08+5PzuniuSMe+88rrqJdL1KhlUTI8VxopFa8qqytp6XnzJoyAvT75wVfW8k+YuHOkfSPNIZ+yl5/tiC89cvfuC0xeK4aHxaO9o9vmzs7mnVwPy6rH0IDZsENUt9Td+srXsDH80V+IgNGWCmowu7j9rMvOaCiU9Ytl+PVpZ2SUGB+cVId2X08WwMeoef2Vb85pr9ndt2TRv9ggFwfUFY88Oc/6JSvCXLYm3PN//7FUVqcVuNPb+Gcc1p5cf35AeGy7MGhzMLlhZ115UjuLBvvHISV84Ptt9MOMXh3qdt7YPxl95I/3PJeWVLZ0Z/8big39vG/mvkWi7VnZ/3Pt4hxDrNn/c0l0H4KzdgfAOTzVMThS0ZCscIdkFM0hUHbmw186oWR+vrr0UbMdLI6MzNcBJJWVeupdQd+/Pjy2INs5uuckrFi831dXZRWeuDGIC40Eh73a+/Hr9xPjE/QHLN9ubk99wJdX2jhRvTBF/aWjM//PABP+xqi6RrPf4ZDeX+/RQiGzjnFZZJJmnnt76jJC/f+P4g5/dsgUGRLhpdvOG0PevnJXw3PaIRN4wDpS0/2oQX3Jn1559cg0gf5wtPHWyJxtc5S4mRxUV28oICWnJOlsnsvfeDNACQNYCtBAQd6QzTxwXiZ579pnLImfHS17D6MGqVHYy8VbveKF3MPNipRRL9w8EtxzszT2WcJ360Zx9ULpOX730NxZzRcNCnduwcHZpxQUnZVad24olLa7YuXMgNpLT6+5+MbunY/ny5o/E1KNk9CesE/n4wWK4bSzkmu6Qd/VAXnxb5/5XpyvPo6SqpfEkSeLsUGsigYoK0GVZ8INvrDjtgi1bttiOw4UcwNe2zPivD1a4x7clHWfbWIFG61sna2fWFtJ9Q2XheCaWzhX3miAcriA+LUs04iSTwYzmunhNe42aNSs51ljmxzk3VulP5EVh7yj+vGOCXxx25s2uoVlO4P8BoN6063540+4D+96jD5nOsPPa5ipi/9rd3T1Hr/huQ81VdZ5zQ0apB6/c13PBeiJGS4v7Zk9POG9O6yWzBd8WyRcwtGDh8Nor/imgoTdTBk6xwJEwVxQyXzCOiLoZT5CT8IwXk0Up/UwszGSiHBrs2jWB5GTBjo6VxFM9pc6Iq7amrPlKDmLz4LIVn791y5YiAKwB5GbArp8G7zCNCQA2zmldKwUG/L3dj2aamrxUX1+4AdAAcMPctn+J6/AHvuf953f2dq1hO0V/EgIb58++zIxPfK28sXbmR46LikSF8FR5HI5DUI4ElGRBRGwMjB8iLBn4eQM/G9pwvIhDg3mMlyy90V9kAomkI1GQ6sqr3uq5EWB0NDTEZMKb89193W/8Q20gABARbpozp61oSpUcjSVMZvLWMuZlo0x/scrZD8tlRJwSJHwlqcwGwdz6mkjTonoP0aiEFhK+YQoNQxuLsKihfQ3SFtAGjgKKPmMgozGS1Yg6Ao6r+kRZxccuf33Xy3cBzlpAd7TX1bhO/DtX7+n8NhHxuxrfAYjpmsFuWjxvmc7nblRCKSFIRIkoKnk84bl+wpGJGLNKOMQxQdITHI0qJaOKyl7qn5jX5RtyHELEAl4kFiolM36+MBytqXEd1y2GfmkiWlNTnc/m8hrwCpmMtsyRYr7g5gLdVzL2IZOqvO+GN97of6++9V2RXwPIBR0d7Pz65385tTo2a27SO2CsTTFx1GhOauaIBTxtrKuZPWJAM8M3jGxoUBlRKHMEQjN1rJSCDTNXOmQVEY2FTL422gpBDGgSkkHsCyFDSSJbDHV+xNf1+/JhbkiI1Zt2dfYdy/H3RP7woptmzXz1Q5XespxlGGYQgJy2cIlQsAxBBAOgZKxNKIG2hIs3J32cWBkRvYUQQyUNADDMSEgBTwmklMDuyRKyhsHMR9puJQgCQEwSkq6CpwQCC7ww4d90XU//d6ZbUP1eyKujPfv3xXNOK+YK5dsnSjsSUa+CtCnmrXizKqKWjvn8XEpxkzCce0sDthicJ9iq1oRLKUdg2Nd4fCB3JJbaAmWOwImVEfiW0V3QyBmGfOcts5KIWIphKoV/F2zbKxS1eEoef/j9/0YbyQDFF81dckrE+Ylv+BLyvC11EbevNhnNTGh+sEFyc+hEXk4iiCciXnRvplS0QXAmWcQEEeYmPSpoC2MZe7IBlCBYC7iSkNeMckcgqQSGfAPfMhwiCCJIQZCAiUspvWTyq1fv67r8tGSc40Kcl1DU+P76ukc2jowPHjsxeAfyBOJNJf+WD9XEzwqIJnrywaWrUrHI02OTWBh3P1HnOXhmLIMP1CXRVwxhQg1JQJEZLr09O6JpyB0pEHMFCoEGA8gYRhMRqlyJ4ZKBkofbeAYD0krpu9EU/6CpKWrLIoWxbP6luZ44sTwMvg5gbcVyCOx49/mRABglbX89EBhkQ1N+qKQjf8uUzEgpxJ6sb1/P+LanENqtwznz0njBFgybiBSo9dT0nSAIAoy18LXFjFQEtXEX2jAEgMnAQAOo9STsYUcFMQsZslSFImMyXi5/7LXV7/B9fUGO5G2j2u5KsfnUxXfd5dy9A2HHNL3/B20A0DMTmTcqovFnDljvoTJJKxoVV3YVtB0saeorhCSIaLCkKactuZKooC2iisgTAm1xB0VtkSqLojMfIlMMMVoMQVLAAIi5CrWuRF1EwbeMMV+DlTMWjzgT5ZKoQnDNDAUvUirWlIrF2fFUdDU5ToUkJIt/3WpqJrHzLgT5dxtQ0dsRgIWQuG1uc9e55ar1/kNZHRqrxDQxmBlEdORrC4InBc6fkUR/PsBxDUmUHIWMP4U0Yao/TBHQM5rDjJjDvmF6PaeHWlKxlxsibhCH1kpSRpd8jwiLAsbiLJMagoD2PK5JRuj1oezQrv701Tf39P/iruXHORfv2KEP6//hcPBmQD527TUO//6eqZAQKROLTEoIDQAy4sWN1szaEAAu+QFra2IAoKTAzqEcj4TWvC/hqPqIQjg9PpYEGAYCw5QODT5UE6l1yX5Y2+KUkyyyrpK9PslOhzBRp8MVFTqMHBjNi9yEMhe019VVEn5uLY2s3bHjkbVHjQSPcOlCwCwfGBDvZyOeHwuDHMQLZRXVE6aY1zoIAMAFCcAhkspBjcDx7PsxCzCBaW8hNHtKKEogWRt1EFgG0TQvASQlIQgZz4/kKcPCsJREWotyssnWmLOwMaoWZklobRlSSTG/IoZXxwuyv2fQnJKIUqdrf7iusS5m8qUnNkxOpo8uiadkY/ly55b0wP5qSQ29Ae8WJEWpmNfTBc/UfFAIQAgqV2KBJPLOrk/gUCnE3LgL31hE1PRkcDq2DhFeSxfRX9I+V1b5TTNquSIVE24iFqN4nLoHx3jX838rNsYc7/SIcawgDBQ1AssoGQYJQoqYe6VLqjyJ/sFMjyVccvnOfY/RMfNy55bW+r0XNpW39U4UoRmQYkoEA2NhQVMFBzMKhiEImFcVw4FCiIUp70hmPSJlBJQM45FDWSytiueXVsaVssb1SwFpZkSUwHanPBf/0Ed3v/jAo0ONA90fPrkuwa+nSzRc0rAMMBgRKTgmGOHsuQPx+qY9e558ojJV0/TRd0jQggULiPNjggTQXhnVUpDIhRaTIMyqiEEUfQSBwfRgXQCA5rc9N5gqJ0AAM+AKge0jeSwrj2JFZSTeD4uCUqiqjsAp+Dw4lKZ0S7Mdf+75F6965tlLfzK/ddekbxa8Ml601d4UbEoA6dBiJAzJ6R92R4fGvimkWJ0dHzpHHZ7uE4A1q9e4zl9/FbWWIaSQPfmQnhjKIWfA9ekSPjKvliLpHAJtQfS2VNGRPQggPlK3jPgahi0WlXl4fLiANyZKCELL5QkXH2ivQmN5AsHggOoLaMZn6+tXxWArDxU1jGVqiDoApjJ1aCx62bI/Pl4eON6VceWmLImN4mjkx597KApj3MNU2T6Sh2+AGh3QocFJemrfCCAFJABFBEkER0wZCppSFkEEIoIrCMO+wayEh9fSJTzTn0HUWNQGJcqNTNKDuwZp0jBOjpjojOLER88qc54+sSJS70kyFrBjvrFDvrYHsoEZLBkuGLaramP8qRrv01rr0tVvdb18OFmrbYA9S/GXKgSdPzvuBj05n3bnQiRhqebUU7qsCeXE8JhX4bnsa0taWxSNhTHARGjgEsFYRmiB0FgwA4eKGpWuxPOjRUSIkHSUrT7zjEE34vFwX78H6WBZ0qGZUUXtCQ95zVAEUR9RQjJTgkCVrhLlCuQKIWCMZCJ0l2zvh+c1/ekdnI8JaQMmOpALvLy2oCCAmtU21Lp4wWi8omzy9Uf+tLivEAirLRolacOAEkBgGP2BER5BGH6bSkVmpphj85ZJhIFo+PQnu+qiSronLk9ng7B2pK+7Olsd40cHc37aNy8G2hSV6zoJydpJpBwnHlfZocHBsqYZKX9kdGy4obFuOJvtbUzmzxye8NceLok1AEp9dMnPMk/u37dtovCViKNmQFCbk0qNdN/zy8WF1tlD0Yrywu7xdDLiOQg8pQQByhIYBDul6yxBdFjfs4Zp16QvRRDAaWjIliPUpZ/ePWt3XXOu+dTTu3bv31/9ykQRMUn0yTlVVbA2S47jaGaQVBKSlPbKoyKOlHbizVoWqkwkOPHZfBiZDPn5o5Hnb05NYp8A8ASIcE1NxbcQhNfmZ7YddKuqrTzYL6VSKGirD0h5j3GdkdLkJEljqoRSK6KCFpcsWyKQAIiZQa73rKNUrYx49f7wqLs7EEiPZ7zjiJil4L+lSxQjeI/1ZRbFlQBbRskyLBjGMiwRAjMOC0KBkSOpnhs29uc3dh58Wr33j1BGtLH5t2PdXd898/JvT3a98FI1ZzKeG42yZDx8bWf3l49e/qOTTqrNDva+KY2psICJSCFC1/vulXu7rt/8rW9F9z6weYDOO3fCVNdml5x+Wq5UyFdGjCHjCVsg+t3fxvOTDBZCSdeV4tOC4RkQCAxBZMqUcPKOuvLat3ruPDInOPqf6g1L5s1VfnByaGwtYMvJcSK2WPy8E4QVBoDnONDMKFr7HFvudOKxqBvxVGF8bAIkS1KKsxR4jmEwSZn3kqmf6iAs+vlslsPwm9Xt7ckTv/i5npGu7sTu393b5BDEpDGj0UTsE5Gq2on84ECxorY6PzE2frUolS4OLFsApIQQVomHrzpw6KOw9p1V5WHjv790/kLHD88JrWlntnVa6zIBtiydBOvAgZApDkMhHKeBjU04giRbg6jjwGoN3zIMvf2XOSpouklhlAAYP4C1FtYYxGIxaBAsLEeEJCEFjLXQDFhgEmxTmGoXmECQrvMCMw5KKbviLU13XvLE9oP/DXZV2u0DeCRZAAAAAElFTkSuQmCC" alt="Happy Camper" height="48">
+  </div>
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress-bar"></div></div>
+</header>
+ 
+<main id="main" style="background-color:#FAF8F4">
+  <section class="cover" style="background-color:#131e36">
+    <div class="cover-kicker">After your journey</div>
+    <h1 id="cover-title">How was Japan?</h1>
+    <div class="cover-trip" id="cover-trip"></div>
+    <div class="cover-rule"></div>
+    <p>Every journey we curate is built by hand, and the next one is shaped by what you tell us now. A few minutes, honestly given, is the most useful thing you can send us — the highlights and the moments that fell short alike.</p>
+    <div class="cover-tag">Unlocking Japan, one thoughtful moment at a time</div>
+    <div class="cover-meta">About 5 minutes · Only two questions are required</div>
+  </section>
+ 
+  <form id="fb" novalidate>
+    <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+ 
+    <!-- 1 · About you -->
+    <div class="section-label"><span class="sec-num">1</span>About you</div>
+    <div class="card">
+      <div class="row2">
+        <div class="q"><label class="q-label" for="f-name">Your name</label><input type="text" id="f-name" name="name" autocomplete="name"></div>
+        <div class="q"><label class="q-label" for="f-email">Email <span class="q-hint" style="display:inline">· optional</span></label><input type="email" id="f-email" name="email" autocomplete="email" inputmode="email"></div>
+      </div>
+      <div class="row2">
+        <div class="q"><label class="q-label" for="f-trip">Your journey</label><input type="text" id="f-trip" name="trip" placeholder="e.g. Tokyo & Kyoto"></div>
+        <div class="q"><label class="q-label" for="f-dates">When</label><input type="text" id="f-dates" name="travel_dates" placeholder="e.g. November 2026"></div>
+      </div>
+    </div>
+ 
+    <!-- 2 · Overall -->
+    <div class="section-label"><span class="sec-num">2</span>Overall</div>
+    <div class="card">
+      <div class="q" data-required="overall_rating">
+        <span class="q-label">How would you rate your journey overall?<span class="req">*</span></span>
+        <div class="stars" data-stars="overall_rating"></div>
+        <div class="star-cap" data-cap="overall_rating"></div>
+        <div class="q-err">Please choose a rating.</div>
+      </div>
+      <div class="q" data-required="recommend">
+        <span class="q-label">How likely are you to recommend Happy Camper to a friend?<span class="req">*</span></span>
+        <div class="scale" data-scale="recommend"></div>
+        <div class="scale-ends"><span>Not likely</span><span>Without hesitation</span></div>
+        <div class="q-err">Please choose a number.</div>
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-words">Three words for the journey</label>
+        <input type="text" id="f-words" name="three_words" placeholder="e.g. generous, unhurried, surprising">
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-moment">The moment you keep coming back to</label>
+        <div class="q-hint">A meal, a conversation, a view — whatever stayed with you.</div>
+        <textarea id="f-moment" name="best_moment"></textarea>
+      </div>
+    </div>
+ 
+    <!-- 3 · Dining -->
+    <div class="section-label"><span class="sec-num">3</span>The tables</div>
+    <div class="card">
+      <div class="q">
+        <span class="q-label">The restaurant selection</span>
+        <div class="q-hint">Fit to your tastes, range and level of the counters we chose.</div>
+        <div class="stars" data-stars="rating_restaurants"></div>
+        <div class="star-cap" data-cap="rating_restaurants"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">How well your dietary needs were handled</span>
+        <div class="stars" data-stars="rating_dietary" data-na="1"></div>
+        <div class="star-cap" data-cap="rating_dietary"></div>
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-bestmeal">Your best meal, and why</label>
+        <textarea id="f-bestmeal" name="best_meal"></textarea>
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-missed">Any meal that did not live up to it?</label>
+        <div class="q-hint">Tell us plainly — it changes what we book for the next guest.</div>
+        <textarea id="f-missed" name="meal_missed"></textarea>
+      </div>
+      <div class="q">
+        <span class="q-label">The pace of dining</span>
+        <div class="choices" data-radio="dining_pace">
+          <label class="chip"><input type="radio" name="dining_pace" value="Too many tasting menus">Too many tasting menus</label>
+          <label class="chip"><input type="radio" name="dining_pace" value="Just right">Just right</label>
+          <label class="chip"><input type="radio" name="dining_pace" value="Wanted more">Would have liked more</label>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 4 · People & places -->
+    <div class="section-label"><span class="sec-num">4</span>People &amp; places</div>
+    <div class="card">
+      <div class="q">
+        <span class="q-label" id="guides-label">Your guides</span>
+        <div class="q-hint" id="guides-hint">Knowledge, warmth, and how well they read the day.</div>
+        <div class="stars" data-stars="rating_guides" data-na="1"></div>
+        <div class="star-cap" data-cap="rating_guides"></div>
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-guidenote">Anything about a guide we should know?</label>
+        <textarea id="f-guidenote" name="guides_comment" style="min-height:72px"></textarea>
+      </div>
+      <div class="q">
+        <span class="q-label">Hotels and ryokan</span>
+        <div class="stars" data-stars="rating_hotels" data-na="1"></div>
+        <div class="star-cap" data-cap="rating_hotels"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">Transport, transfers and drivers</span>
+        <div class="stars" data-stars="rating_transport" data-na="1"></div>
+        <div class="star-cap" data-cap="rating_transport"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">The overall pace</span>
+        <div class="choices" data-radio="pace">
+          <label class="chip"><input type="radio" name="pace" value="Too relaxed">Too relaxed</label>
+          <label class="chip"><input type="radio" name="pace" value="Just right">Just right</label>
+          <label class="chip"><input type="radio" name="pace" value="Too full">Too full</label>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 5 · Planning -->
+    <div class="section-label"><span class="sec-num">5</span>Planning &amp; support</div>
+    <div class="card">
+      <div class="q">
+        <span class="q-label">Planning and communication before you travelled</span>
+        <div class="stars" data-stars="rating_planning"></div>
+        <div class="star-cap" data-cap="rating_planning"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">Support while you were in Japan</span>
+        <div class="q-hint">WhatsApp replies, changes on the day, problems solved.</div>
+        <div class="stars" data-stars="rating_support"></div>
+        <div class="star-cap" data-cap="rating_support"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">Your itinerary website</span>
+        <div class="stars" data-stars="rating_website" data-na="1"></div>
+        <div class="star-cap" data-cap="rating_website"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">Which parts of the website did you use most?</span>
+        <div class="choices" data-check="website_used">
+          <label class="chip"><input type="checkbox" name="website_used" value="Daily itinerary">Daily itinerary</label>
+          <label class="chip"><input type="checkbox" name="website_used" value="Maps & directions">Maps &amp; directions</label>
+          <label class="chip"><input type="checkbox" name="website_used" value="Taxi card">Taxi card</label>
+          <label class="chip"><input type="checkbox" name="website_used" value="Weather">Weather</label>
+          <label class="chip"><input type="checkbox" name="website_used" value="Discover">Discover</label>
+          <label class="chip"><input type="checkbox" name="website_used" value="Currency">Currency</label>
+          <label class="chip"><input type="checkbox" name="website_used" value="Journal">Journal</label>
+        </div>
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-change">If we planned this journey again, what would you change?</label>
+        <textarea id="f-change" name="would_change"></textarea>
+      </div>
+    </div>
+ 
+    <!-- 6 · Looking ahead -->
+    <div class="section-label"><span class="sec-num">6</span>Looking ahead</div>
+    <div class="card">
+      <div class="q">
+        <span class="q-label">Would you travel with us again?</span>
+        <div class="choices" data-radio="travel_again">
+          <label class="chip gold"><input type="radio" name="travel_again" value="Yes">Yes</label>
+          <label class="chip gold"><input type="radio" name="travel_again" value="Perhaps">Perhaps</label>
+          <label class="chip gold"><input type="radio" name="travel_again" value="Unlikely">Unlikely</label>
+        </div>
+      </div>
+      <div class="q">
+        <span class="q-label">Where might you like to go next?</span>
+        <div class="choices" data-check="next_destinations" id="dest-choices">
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Tokyo again">Tokyo again</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Kyoto & Kansai">Kyoto &amp; Kansai</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Kanazawa & Hokuriku">Kanazawa &amp; Hokuriku</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Hokkaido">Hokkaido</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Kyushu">Kyushu</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Rural & onsen Japan">Rural &amp; onsen Japan</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="London">London</label>
+          <label class="chip gold"><input type="checkbox" name="next_destinations" value="Other" data-other="dest-other">Somewhere else</label>
+        </div>
+        <div class="other-wrap" id="dest-other"><input type="text" name="next_destinations_other" placeholder="Where?"></div>
+      </div>
+      <div class="q">
+        <span class="q-label">Which season appeals?</span>
+        <div class="choices" data-check="next_season">
+          <label class="chip gold"><input type="checkbox" name="next_season" value="Spring">Spring · sakura</label>
+          <label class="chip gold"><input type="checkbox" name="next_season" value="Early summer">Early summer</label>
+          <label class="chip gold"><input type="checkbox" name="next_season" value="Autumn">Autumn · momiji</label>
+          <label class="chip gold"><input type="checkbox" name="next_season" value="Winter">Winter · crab &amp; snow</label>
+        </div>
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-intro">Anyone you would like to introduce to us?</label>
+        <div class="q-hint">Optional — a name and how to reach them. We will mention you when we get in touch.</div>
+        <input type="text" id="f-intro" name="introduction">
+      </div>
+      <div class="q">
+        <label class="q-label" for="f-else">Anything else you would like to tell us</label>
+        <textarea id="f-else" name="anything_else"></textarea>
+      </div>
+      <div class="q">
+        <label class="consent"><input type="checkbox" name="quote_permission" value="Yes" id="f-quote"><span>Happy Camper may quote my comments on its website and in conversations with future guests.</span></label>
+        <div class="other-wrap" id="quote-credit">
+          <div class="choices" data-radio="quote_credit">
+            <label class="chip"><input type="radio" name="quote_credit" value="Full name">Credit my full name</label>
+            <label class="chip"><input type="radio" name="quote_credit" value="First name & initial">First name &amp; initial</label>
+            <label class="chip"><input type="radio" name="quote_credit" value="Anonymous">Anonymous</label>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="submit-card">
+      <button type="submit" class="submit-btn" id="submit-btn">Send feedback <span class="gold">→</span></button>
+      <div class="submit-note">Your answers go only to Tomoko and Gerhard. Nothing is published without your permission.</div>
+      <div class="form-err" id="form-err" role="alert"></div>
+    </div>
+  </form>
+ 
+  <section id="thanks" aria-live="polite">
+    <div class="thanks-card">
+      <div class="mark">ありがとう</div>
+      <h2 id="thanks-title">Thank you</h2>
+      <p>Your feedback has reached us. We read every response ourselves, and it will shape the journeys we curate next.</p>
+      <div class="sig">Tomoko &amp; Gerhard</div>
+      <div class="thanks-actions">
+        <a class="t-btn wa" id="wa-link" href="#" target="_blank" rel="noopener">💬 Message us on WhatsApp</a>
+        <a class="t-btn ghost" href="https://happycamper.food" target="_blank" rel="noopener">happycamper.food</a>
+      </div>
+    </div>
+  </section>
+</main>
+ 
+<footer style="background-color:#FAF8F4">
+  <div class="foot-rule"></div>
+  <div class="foot-cities">Tokyo · Kyoto · London</div>
+  <div class="foot-contact"><a href="mailto:hello@happycamper.food">hello@happycamper.food</a> · <a href="tel:+819061589006">+81 90 6158 9006</a></div>
+</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+ 
+<script>
+(function(){
+'use strict';
+ 
+/* ═══════════════════════════════════════════════════════
+   CONFIG — everything per-deployment lives here.
+   Per-guest values come from the link, e.g.
+   ?name=Richard%20Haas&trip=Japan%20in%20Autumn&dates=Nov%202026&guides=Tomoko-san,Ryan-san&slug=haas
+═══════════════════════════════════════════════════════ */
+var CONFIG = {
+  version: 'v1',
+  formspree: 'https://formspree.io/f/xjgljypz',
+  formType: 'post-trip-feedback',
+  contacts: {
+    gerhard: { wa:'818069892107' },
+    tomoko:  { tel:'+819061589006' },
+    email: 'hello@happycamper.food'
+  },
+  draftKey: 'hc-feedback-draft-v1'
+};
+ 
+var STAR_CAPS = ['', 'Disappointing', 'Below expectations', 'Good', 'Very good', 'Exceptional'];
+var STAR_FIELDS = [];
+ 
+/* ══════════════ HELPERS ══════════════ */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(s){return String(s===null||s===undefined?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+var toastTm;
+function toast(msg){var el=$('#toast');if(!el)return;el.textContent=msg;el.classList.add('show');clearTimeout(toastTm);toastTm=setTimeout(function(){el.classList.remove('show');},2200);}
+function safe(fn,name){try{fn();}catch(e){if(window.console)console.error(name+' error:',e);}}
+function params(){
+  var out={};
+  try{ new URLSearchParams(window.location.search).forEach(function(v,k){out[k]=v;}); }catch(e){}
+  return out;
+}
+var P = params();
+ 
+/* ══════════════ BUILD CONTROLS ══════════════ */
+function buildStars(){
+  $$('[data-stars]').forEach(function(box){
+    var name=box.getAttribute('data-stars');
+    STAR_FIELDS.push(name);
+    var h='';
+    for(var i=1;i<=5;i++){
+      h+='<label class="star" data-v="'+i+'" aria-label="'+i+' of 5 · '+STAR_CAPS[i]+'"><input type="radio" name="'+name+'" value="'+i+'">★</label>';
+    }
+    if(box.getAttribute('data-na'))h+='<label class="na"><input type="radio" name="'+name+'" value="n/a">Not applicable</label>';
+    box.innerHTML=h;
+  });
+}
+function paintStars(name){
+  var box=$('[data-stars="'+name+'"]');if(!box)return;
+  var checked=$('input[name="'+name+'"]:checked',box);
+  var v=checked?checked.value:'';
+  var n=parseInt(v,10)||0;
+  $$('.star',box).forEach(function(s){s.classList.toggle('lit',parseInt(s.getAttribute('data-v'),10)<=n);});
+  var na=$('.na',box);if(na)na.classList.toggle('on',v==='n/a');
+  var cap=$('[data-cap="'+name+'"]');if(cap)cap.textContent=n?STAR_CAPS[n]:(v==='n/a'?'Not applicable':'');
+}
+function buildScale(){
+  $$('[data-scale]').forEach(function(box){
+    var name=box.getAttribute('data-scale'),h='';
+    for(var i=0;i<=10;i++)h+='<label data-v="'+i+'"><input type="radio" name="'+name+'" value="'+i+'">'+i+'</label>';
+    box.innerHTML=h;
+  });
+}
+function paintChips(){
+  $$('.scale label,.chip').forEach(function(l){var inp=$('input',l);if(inp)l.classList.toggle('on',inp.checked);});
+  $$('input[data-other]').forEach(function(inp){var w=document.getElementById(inp.getAttribute('data-other'));if(w)w.classList.toggle('show',inp.checked);});
+  var q=$('#f-quote'),qc=$('#quote-credit');if(q&&qc)qc.classList.toggle('show',q.checked);
+}
+function paintAll(){STAR_FIELDS.forEach(paintStars);paintChips();progress();}
+ 
+/* ══════════════ PREFILL FROM LINK ══════════════ */
+function prefill(){
+  var map={name:'f-name',email:'f-email',trip:'f-trip',dates:'f-dates'};
+  Object.keys(map).forEach(function(k){if(P[k]){var el=document.getElementById(map[k]);if(el&&!el.value)el.value=P[k];}});
+  var first=(P.name||'').split(' ')[0];
+  if(first){$('#cover-title').textContent='How was Japan, '+first+'?';$('#thanks-title').textContent='Thank you, '+first;}
+  var line=[P.trip,P.dates].filter(Boolean).join(' · ');
+  if(line)$('#cover-trip').textContent=line;
+  if(P.guides){
+    var g=P.guides.split(',').map(function(x){return x.trim();}).filter(Boolean);
+    if(g.length){$('#guides-label').textContent='Your guides — '+g.join(', ');}
+  }
+}
+ 
+/* ══════════════ DRAFT (per-device convenience) ══════════════ */
+function collect(){
+  var form=$('#fb'),data={};
+  $$('input,textarea',form).forEach(function(el){
+    if(!el.name||el.name==='_gotcha')return;
+    if(el.type==='radio'){if(el.checked)data[el.name]=el.value;return;}
+    if(el.type==='checkbox'){
+      if(el.name==='quote_permission'){data[el.name]=el.checked?'Yes':'No';return;}
+      if(!data[el.name])data[el.name]=[];
+      if(el.checked)data[el.name].push(el.value);
+      return;
+    }
+    if(el.value.trim())data[el.name]=el.value.trim();
+  });
+  Object.keys(data).forEach(function(k){if(Array.isArray(data[k])){if(data[k].length)data[k]=data[k].join(', ');else delete data[k];}});
+  return data;
+}
+var draftTm;
+function saveDraft(){clearTimeout(draftTm);draftTm=setTimeout(function(){try{localStorage.setItem(CONFIG.draftKey,JSON.stringify(collect()));}catch(e){}},400);}
+function loadDraft(){
+  var d=null;try{d=JSON.parse(localStorage.getItem(CONFIG.draftKey)||'null');}catch(e){}
+  if(!d)return;
+  var form=$('#fb');
+  Object.keys(d).forEach(function(k){
+    var val=String(d[k]);
+    $$('[name="'+k+'"]',form).forEach(function(el){
+      if(el.type==='radio')el.checked=(el.value===val);
+      else if(el.type==='checkbox'){
+        if(k==='quote_permission')el.checked=(val==='Yes');
+        else el.checked=val.split(', ').indexOf(el.value)>-1;
+      }
+      else if(!el.value)el.value=val;
+    });
+  });
+}
+function clearDraft(){try{localStorage.removeItem(CONFIG.draftKey);}catch(e){}}
+ 
+/* ══════════════ PROGRESS ══════════════ */
+function progress(){
+  var qs=$$('#fb .q'),done=0;
+  qs.forEach(function(q){
+    var filled=$$('input,textarea',q).some(function(el){
+      if(el.type==='radio'||el.type==='checkbox')return el.checked;
+      return el.value&&el.value.trim();
+    });
+    if(filled)done++;
+  });
+  var bar=$('#progress-bar');if(bar)bar.style.width=(qs.length?Math.round(done/qs.length*100):0)+'%';
+}
+ 
+/* ══════════════ VALIDATE + SUBMIT ══════════════ */
+function validate(){
+  var first=null;
+  $$('[data-required]').forEach(function(q){
+    var name=q.getAttribute('data-required');
+    var ok=!!$('input[name="'+name+'"]:checked');
+    q.classList.toggle('invalid',!ok);
+    if(!ok&&!first)first=q;
+  });
+  var em=$('#f-email');
+  if(em&&em.value.trim()&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim())){
+    var eq=em.closest('.q');if(eq){eq.classList.add('invalid');if(!$('.q-err',eq)){var d=document.createElement('div');d.className='q-err';d.textContent='Please check this address.';eq.appendChild(d);}}
+    if(!first)first=eq;
+  }else if(em){var q2=em.closest('.q');if(q2)q2.classList.remove('invalid');}
+  if(first){first.scrollIntoView({behavior:'smooth',block:'center'});toast('A couple of answers are still needed');}
+  return !first;
+}
+function mailtoFallback(data){
+  var lines=Object.keys(data).map(function(k){return k+': '+data[k];});
+  return 'mailto:'+CONFIG.contacts.email+'?subject='+encodeURIComponent('Journey feedback'+(data.name?' · '+data.name:''))+'&body='+encodeURIComponent(lines.join('\n'));
+}
+function showError(data,msg){
+  var el=$('#form-err');
+  el.innerHTML=esc(msg)+' Your answers are kept on this device — try again in a moment, or <a href="'+esc(mailtoFallback(data))+'">send them by email</a> instead.';
+  el.classList.add('show');
+}
+function submit(e){
+  e.preventDefault();
+  $('#form-err').classList.remove('show');
+  if(!validate())return;
+  var data=collect();
+  if($('input[name="_gotcha"]').value)return;
+  data._subject='Journey feedback · '+(data.name||'Guest')+(data.trip?' · '+data.trip:'')+' · '+(data.overall_rating||'-')+'★ · NPS '+(data.recommend||'-');
+  if(data.email)data._replyto=data.email;
+  data.form_type=CONFIG.formType;
+  data.client_slug=P.slug||'';
+  data.page_version=CONFIG.version;
+  data.submitted_at=new Date().toISOString();
+  var btn=$('#submit-btn');btn.disabled=true;btn.textContent='Sending…';
+  if(!window.fetch){showError(data,'This browser could not send the form.');btn.disabled=false;btn.innerHTML='Send feedback <span class="gold">→</span>';return;}
+  fetch(CONFIG.formspree,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+    .then(function(r){
+      if(r.ok){
+        clearDraft();
+        $('#fb').style.display='none';
+        $('.cover').style.display='none';
+        $('#thanks').classList.add('show');
+        $('#progress-bar').style.width='100%';
+        window.scrollTo(0,0);
+        return;
+      }
+      return r.json().catch(function(){return {};}).then(function(j){
+        var m=(j&&j.errors&&j.errors.length)?j.errors.map(function(x){return x.message;}).join(' '):'Something went wrong on our side.';
+        throw new Error(m);
+      });
+    })
+    .catch(function(err){
+      showError(data,(err&&err.message)?err.message:'We could not reach the server.');
+      btn.disabled=false;btn.innerHTML='Send feedback <span class="gold">→</span>';
+    });
+}
+ 
+/* ══════════════ INIT ══════════════ */
+function init(){
+  safe(function(){$('#hdr-ver').textContent=CONFIG.version;},'Version');
+  safe(buildStars,'Stars');
+  safe(buildScale,'Scale');
+  safe(loadDraft,'Draft');
+  safe(prefill,'Prefill');
+  safe(function(){
+    var first=(P.name||'').split(' ')[0];
+    var msg='Hi Gerhard'+(first?', it is '+first:'')+' — I have just sent my feedback.';
+    $('#wa-link').href='https://wa.me/'+CONFIG.contacts.gerhard.wa+'?text='+encodeURIComponent(msg);
+  },'WhatsApp');
+  var form=$('#fb');
+  form.addEventListener('change',function(e){
+    var q=e.target.closest('.q');if(q)q.classList.remove('invalid');
+    paintAll();saveDraft();
+  });
+  form.addEventListener('input',function(){progress();saveDraft();});
+  form.addEventListener('submit',submit);
+  safe(paintAll,'Paint');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+}());
+</script>
+</body>
+</html>
+ 
